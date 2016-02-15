@@ -39,31 +39,36 @@ After calling your function, the tree should look like:
  * };
  */
 
-/* The given solution is based on simple DFS Recursion */
+/* Here the given solution is based on BFS - we iterate on
+all the nodes at a current level and fill the next pointers
+for the next level */
 
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
         
-         if(!root) return;
-         
-         if(root->left)
-         root->left->next = root->right;
-         
-         if(root->right)     /* if having a valid right child, two cases arise */
-         {
-             if(root->next)               /* case 1: if current node has valid next pointer */
-             {
-                 root->right->next = root->next->left;
-             }
-             else                        /* case 2: current node does not have valid next pointer */
-             {
-                 root->right->next = NULL;
-             }
-         }
-         
-         connect(root->left);
-         connect(root->right);
+        if(!root) return;
+        
+        if(!root->left && !root->right) return;
+        
+        TreeLinkNode* rightSibling;
+        TreeLinkNode* p1=root;
+        
+        while(p1)           /* iterate on all the nodes at a current level and fill the next pointers for the next level                  */
+        {  
+            if(p1->next)
+            {
+                rightSibling = p1->next->left;
+            }
+            else
+                rightSibling=NULL;
+                
+            p1->left->next=p1->right;
+            p1->right->next=rightSibling;
+            p1=p1->next;
+        }
+        
+        connect(root->left);
             
         }
     
